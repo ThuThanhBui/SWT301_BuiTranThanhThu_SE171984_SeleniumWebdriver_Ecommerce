@@ -91,7 +91,7 @@ public class TestCase01 {
             // ScreenShot Capture
             File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
-            String png = ("D:\\selenium-webdriver-java\\src\\test\\java\\homework\\TestCase01.png");
+            String png = ("E:\\SWT\\swt_selenium\\SWT301-SeleniumWebdriver-Ecommerce\\src\\test\\java\\homework\\TestCase01.png");
             FileUtils.copyFile(scrFile, new File(png));
         }catch(Exception ex){
             ex.printStackTrace();
