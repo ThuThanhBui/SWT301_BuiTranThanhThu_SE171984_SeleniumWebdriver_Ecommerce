@@ -79,10 +79,9 @@ public class TestCase02 {
             System.out.println("Sony Xperia Detail Price: " + detailPrice);
             AssertJUnit.assertEquals(price, detailPrice);
 
-            // ScreenShot Capture
             File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
-            String png = ("E:\\SWT\\swt_selenium\\SWT301-SeleniumWebdriver-Ecommerce\\src\\test\\java\\homework\\TestCase02.png");
+            String png = ("E:\\SWT\\SWT301-SeleniumWebdriver-Ecommerce\\src\\test\\java\\homework\\TestCase02.png");
             FileUtils.copyFile(scrFile, new File(png));
         }catch(Exception ex){
             ex.printStackTrace();

@@ -1,4 +1,13 @@
-/* “Verify that you cannot add more product in cart than the product available in store”
+package homework;
+
+import driver.driverFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.testng.Assert;
+import org.testng.AssertJUnit;
+import org.testng.annotations.Test;
+/*
 
 Test Steps:
 
@@ -17,64 +26,69 @@ Test Steps:
 6. Then click on �EMPTY CART� link in the footer of list of all mobiles. A message "SHOPPING CART IS EMPTY" is shown.
 
 7. Verify cart is empty
-
- */
-package homework;
-
-import driver.driverFactory;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.testng.Assert;
-import org.testng.AssertJUnit;
-import org.testng.annotations.Test;
-
+*/
 public class TestCase03 {
-
     @Test
-    public static void Testcase03(){
-        // Khởi tạo WebDriver
-        WebDriver driver =  driverFactory.getChromeDriver();
-        try {
-            // TC03: Verify that you cannot add more product in cart than the product available in store
-            // Step 1: Go to http://live.techpanda.org/
+    public void TestCase03(){
+        //1. Init web-driver session
+        WebDriver driver = driverFactory.getChromeDriver();
+        //2. Open target page
+        try{
+
+            /**
+             * Step 1: Goto http://live.techpanda.org/
+             * Click mobile menu
+             */
+            //1. Open target page
             driver.get("http://live.techpanda.org/");
 
-            // Step 2: Click on "MOBILE" menu
+            //1.1 Click on MOBILE -> Menu
             WebElement mobileLink = driver.findElement(new By.ByCssSelector("body > div:nth-child(1) > div:nth-child(2) > header:nth-child(2) > div:nth-child(1) > div:nth-child(4) > nav:nth-child(1) > ol:nth-child(1) > li:nth-child(1) > a:nth-child(1)"));
 
+            //debug purpose only
+            Thread.sleep(2000);
+
+            //1.2 Click MOBILE Link
             mobileLink.click();
 
-            // Step 3: Click on "ADD TO CART" for Sony Xperia mobile
-            WebElement sonyXperiaAddToCart = driver.findElement(By.xpath("//li[2]//div[1]//div[3]//button[1]//span[1]//span[1]"));
-            sonyXperiaAddToCart.click();
+            //2. Add to cart
+            WebElement sonyXPoduct = driver.findElement(new By.ByCssSelector("body > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > ul:nth-child(2) > li:nth-child(2) > div:nth-child(2) > div:nth-child(4) > button:nth-child(1) > span:nth-child(1) > span:nth-child(1)"));
 
-            // Step 4: Change "QTY" value to 1000 and click "UPDATE" button. Verify the error message
-            WebElement qtyInput = driver.findElement(By.xpath("//input[@title='Qty']"));
-            qtyInput.clear();
-            qtyInput.sendKeys("1000");
-            WebElement updateButton = driver.findElement(By.xpath("//button[@title='Update']"));
-            updateButton.click();
-            WebElement errorMessage = driver.findElement(By.xpath("//p[@class='item-msg error']"));
-            //Assert.assertTrue(errorMessage.isDisplayed());
+            //2.1 Click add to cart
+            sonyXPoduct.click();
 
-            // Step 5: Verify the error message
-            AssertJUnit.assertEquals("* The maximum quantity allowed for purchase is 500.", errorMessage.getText());
-            // Step 6: Click on "EMPTY CART" link
-            WebElement emptyCartLink = driver.findElement(By.xpath("//span[contains(text(),'Empty Cart')]"));
-            emptyCartLink.click();
-            WebElement emptyCartMessage = driver.findElement(By.cssSelector("div[class='page-title'] h1"));
-            //Assert.assertTrue(emptyCartMessage.isDisplayed());
+            //3.Input quantity
+            WebElement quantity = driver.findElement(new By.ByCssSelector("input[title='Qty']"));
+            quantity.clear();
+            quantity.sendKeys("1000");
 
-            // Step 7: Verify cart is empty
-            Assert.assertEquals(emptyCartMessage.getText(),"SHOPPING CART IS EMPTY");
+            //3.1 Click update btn
+            WebElement updateBtn = driver.findElement(new By.ByCssSelector("button[title='Update'] span span"));
+            updateBtn.click();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Assert.fail("Test failed due to exception: " + e.getMessage());
-        } finally {
-            // Đóng trình duyệt
-            driver.quit();
+            //4. get error and verify
+            WebElement errorMsg = driver.findElement(new By.ByCssSelector(".item-msg.error"));
+            System.out.println("Error expected: " + errorMsg.getText());
+            System.out.println("Error actual: " + "* The maximum quantity allowed for purchase is 500.");
+            Assert.assertEquals(errorMsg.getText(),
+            "The requested quantity for 'Sony Xperia' is not available.");
+
+            //5. Click on empty cart
+            WebElement emptyCart = driver.findElement(new By.ByCssSelector("button[id='empty_cart_button'] span span"));
+
+            //debug purpose only
+            Thread.sleep(1000);
+
+            emptyCart.click();
+
+            WebElement emptyCartMsg = driver.findElement(new By.ByCssSelector("div[class='page-title'] h1"));
+            System.out.println("Empty message expected: " + emptyCartMsg.getText());
+            System.out.println("Empty message actual: " + "SHOPPING CART IS EMPTY");
+            AssertJUnit.assertEquals(emptyCartMsg.getText(), "SHOPPING CART IS EMPTY");
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
+        // quit driver session
+        driver.quit();
     }
 }
